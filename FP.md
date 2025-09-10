@@ -177,7 +177,7 @@ Let's try to convert 0.1 into a half-precision float!
 
 Let's close the loop and reverse the conversion - this will show us the *error* compared to the correct value of `0.1` decimal.
 
-1. Unbias the exponent - `01011 - 15 = 11100`. In twos-component representation, this is the value `-4`.
+1. Unbias the exponent - `01011 - 1111 = 11100` when we allow for "loop-around" on underflow. In twos-component representation, this is the value `-4`.
 2. Add a `1` to the beginning of the mantissa, then perform the decimal point shift - a negative exponent means to move to the *left*.
 
     `1.1001100110`
@@ -210,7 +210,7 @@ There's a few things to note here:
 >
 > We accept this trade-off because, when working with larger floating point numbers, the *precision* is great enough that we can account for it when we do calculations. (However, as we saw in class, failing to consider this imprecise representation can result in interesting - sometimes devastating - bugs!)
 >
-> In practice, computers can still do floating point math because they will intelligently *round* the results of calculations. If you add `0.1` and `0.2` in a typical computer calculator, you'll get the correct result: `0.3`. *However*, neither `0.2` nor `0.1` can be precisely represented in binary! This works because the computer will actually *understand your decimal input* and try to make apporpriate accommodations for the result of binary calculation. For example, the calculator *knows* you typed "0.1" and "0.2", so it figures "you'll get a decimal result, and since it's addition, the result will have only one decimal place". With this knowledge, the computer can compute the result in floating point and then *round* the result to the number of decimal points.
+> In practice, computers can still do floating point math because they will intelligently *round* the results of calculations. If you add `0.1` and `0.2` in a typical computer calculator, you'll get the correct result: `0.3`. *However*, neither `0.2` nor `0.1` can be precisely represented in binary! This works because the computer will use rounding internally to maintain the precision of your calculations.
 >
 > Thus, even though adding "0.1" and "0.1" might actually be adding "0.099996" and "0.099996" internally, the result - "0.199992" will be *rounded up* to one decimal place - this is how you get `0.2` as the result.
 
