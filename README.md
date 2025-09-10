@@ -13,3 +13,4 @@ Welcome to the MCS 276 GitHub repository! In this repository you will find mater
 ## Supplemental Materials
 
 * **[Dive Into Systems](https://diveintosystems.org/)** - Course Textbook (free)
+* [IEEE 754 Floating Point Reference Guide](FP.md)
