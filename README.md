@@ -9,6 +9,8 @@ Welcome to the MCS 276 GitHub repository! In this repository you will find mater
 ## Contents
 
 * **[Syllabus](SYLLABUS.md)**
+* Assignments:
+  * Assignment 1: [Floating Point](I_ASSIGN1.md)
 
 ## Supplemental Materials
 
