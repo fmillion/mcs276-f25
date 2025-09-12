@@ -225,17 +225,20 @@ The steps for multiplication involve first calculating the exponent and then mul
 
     Start with 0 for the accumulator.
 
-    0 position: 0. Don't add.
-    1 position: 1. Shift original number by 1 and add. Since we have 0 for an accumulator, this essentially does nothing at this point:
+    - *0 position*: 0. Don't add.
+    - *1 position*: 1. Shift original number by 1 and add. Since we have 0 for an accumulator, this essentially does nothing at this point:
 
+    ```
        0000
     + 1011
     -------
       10110
+    ```
 
-    2 position: 0. Do nothing.
-    3 position: 1. Shift decimal point in original number right by 3 and add.
+    - *2 position*: 0. Do nothing.
+    - *3 position*: 1. Shift decimal point in original number right by 3 and add.
 
+    ```
           0000
     +    1011
     ----------
