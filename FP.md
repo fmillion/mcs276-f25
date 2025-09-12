@@ -1,6 +1,8 @@
 # Floating Point Conversion Reference
 
-## To convert *into IEEE floating point* from decimal:
+## Conversions
+
+### To convert *into IEEE floating point* from decimal:
 
 1. Convert the integer portion (to the *left* of the decimal point) to binary. This will become the *leftmost* portion of the mantissa.
 2. Convert the *decimal portion* of the number into binary by using *[successive multiplication](#successive-multiplication)*. Repeat the successive multiplication process until you either 1) end up with a 0, or 2) run out of bits in the mantissa.
@@ -18,7 +20,7 @@
 6. If the original number was positive, set the sign bit (leftmost bit) to 0; if it was negative, set it to 1.
 7. Concatenate the bits for the sign bit, exponent, and mantissa.
 
-## To convert *from IEEE floating point* back to decimal:
+### To convert *from IEEE floating point* back to decimal:
 
 1. Handle the exponent. First, *un-bias* the exponent (same method: subtract the bias value) and convert the binary number to an integer. Then, with the decimal point starting between the first two digits of the mantissa: for positive exponents, move the decimal point to the *right*; for negative exponents, move it to the *left*.
 
@@ -28,7 +30,7 @@
 4. Combine the integer and decimal section.
 5. If the sign bit of the original number was 1, flip the sign - i.e. make the number negative.
 
-## Successive Multiplication
+### Successive Multiplication
 
 To convert fractional components into binary, you use the *successive multiplication* method.
 
@@ -45,7 +47,7 @@ To perform successive multiplication:
     - the result of multiplying and then removing the integer yields 0, or
     - you run out of bits in the mantissa to represent more fractional digits.
 
-### Example
+#### Example
 
 Convert the decimal quantity `0.703125` into binary.
 
@@ -79,7 +81,7 @@ Convert the decimal quantity `0.703125` into binary.
 
 If there are more digits in the mantissa, we simply fill them out with 0's. For a 16-bit half-precision number, we need 10 bits of mantissa, and we can imply the leading 1. Therefore, our final number - the value we would store in the mantissa - would be `0110100000`.
 
-## Converting Fractional Component from Binary to Decimal
+### Converting Fractional Component from Binary to Decimal
 
 Converting the fractional component of a binary number back to decimal can seem daunting. However, there is a shortcut you can use to make the process simpler.
 
@@ -95,7 +97,7 @@ Then, we can *convert the fractional component into decimal* ***as if it were an
 
 Then, we simply make this result the numerator, and the denominator is the HCD. We get `181/256`. We could then compute this on a calculator to get the decimal version of the fractional component!
 
-# Complete Example - Convert from Decimal to Floating Point
+## Complete Example - Convert from Decimal to Floating Point
 
 Convert the number `5.625` into a half-precision IEEE 754 floating point number.
 
@@ -116,7 +118,7 @@ Convert the number `5.625` into a half-precision IEEE 754 floating point number.
 9. The final result: `0100 0101 1010 0000`
 10. We can represent the result in hexadecimal by converting each individual block of 4 bits into an integer. We use the letters A through F for the values 10 through 15. For this number, the result is `45A0`
 
-# Complete Example - Convert from Floating Point to Decimal
+## Complete Example - Convert from Floating Point to Decimal
 
 Convert the IEEE 754 half-precision float `1101011100111000` into decimal.
 
@@ -140,6 +142,156 @@ Convert the IEEE 754 half-precision float `1101011100111000` into decimal.
 8. Finally, since the sign bit is a 1, we simply flip the sign of the number.
 
 Our final answer: `-115.5`.
+
+## Calculations on Floating Point Numbers
+
+### Addition and Subtraction
+
+The steps for addition or subtraction involve first *normalizing* the two numbers, and then simply performing normal binary addition.
+
+1. If you are *subtracting a positive number*, flip the second number to a negative. 
+2. Determine the exponents as integers (compute the exponent by converting the number to decimal and subtracting the bias)
+3. For whichever number has the *smaller* exponent, shift its decimal point to the left `n` times, where `n` is the difference between the larger and smaller exponent. *If numbers are pushed off either end of the mantissa, they become implied zeroes.*
+
+    If the exponents are equal, skip this step.
+4. Add or subtract the mantissas. *If your result becomes negative, remember that the new number will have a negative sign bit.*
+5. Follow the same steps to normalize the new mantissa - implied `1.` at the beginning; shift the decimal point to bring the number into the form `1.x` if necessary
+6. Simply re-combine the new mantissa, exponent and sign bit back into IEEE 754.
+
+#### Example
+
+Let's add the quantities `9.5` and `4.25`.
+
+- Convert the numbers into IEEE 754.
+    - 9.5 = `0 10010 00110000000`
+    - 4.25 = `0 10001 00010000000`
+- Extract the exponents.
+    - `10010` -> `18`. `18 - 15 = 3`. The exponent for 9.5 is `3`.
+    - `10001` -> `17`. `17 - 15 = 2`. The exponent for 4.25 is `2`.
+- Shift the decimal point on the smaller number.
+    - The number with the smaller exponent is 4.25. We shift the decimal point to the left on its mantissa 1 time.
+    - `1.0001000000` -> `0.1000100000`. 
+    - Note that the implied 1 gets shifted into the mantissa. We do *not* add a new implied 1 to the mantissa before calculating!
+- Add the values.
+    
+    ```
+      1.0011000000
+    + 0.1000100000
+    --------------
+      1.1011100000
+    ``` 
+- Check if we need to renormalize the number - in this case we don't have to, since the sum is still in the form `1.x`. Thus, our exponent remains at `18` (the larger of the two source exponents).
+    - Remember: if we needed to move the decimal point to the left, we'd be *subtracting* from the exponent for each move; *add* to the exponent for each move to the right.
+- This number didn't change signs.
+- Thus, we arrive at our answer:
+
+    `0 10010 1011100000`
+
+If you work this number back from IEEE to decimal, you should arrive at the correct answer: `13.75`.
+
+> [!TIP]
+> For subtraction, simply subtract the second number rather than adding it when you do the computation.
+>
+> If the number you are subtracting is larger than the number you're subtracting from, your response would become a negative number - thus you would set the sign bit of the result to `1`.
+
+### Multiplication
+
+The steps for multiplication involve first calculating the exponent and then multiplying the mantissas.
+
+1. Determine the exponent of the final result.
+
+    - Convert the two exponents into binary integers (do NOT accout for the bias - for example, `10001` converts to `17`).
+    - Add the two exponents together
+    - Subtract the *bias value*
+
+    The result is the exponent for the final result.
+
+2. Including the implicit leading 1, multiply the two mantissas.
+
+    To do this, we simply treat the two numbers as integers - we ignore the decimal point.
+
+    - Work from the right to the left. The rightmost position is the `0` position, the next is `1`, then `2`, and so on.
+    - Wherever you find a `1`, *shift the original number to the left by that many places*, and then *add that quantity* to an accumulator.
+
+    Example: multiply `1.011` by `1.010`.
+
+    First, drop the decimal points.
+
+    ```
+      1011
+    * 1010
+    ------
+    ```
+
+    Start with 0 for the accumulator.
+
+    0 position: 0. Don't add.
+    1 position: 1. Shift original number by 1 and add. Since we have 0 for an accumulator, this essentially does nothing at this point:
+
+       0000
+    + 1011
+    -------
+      10110
+
+    2 position: 0. Do nothing.
+    3 position: 1. Shift decimal point in original number right by 3 and add.
+
+          0000
+    +    1011
+    ----------
+         10110
+    +   0000
+    +  1011
+    ---------- 
+       1101110
+    ```
+
+3. Ignore the leading 1, and collect as many bits as are available for the mantissa. If there are fewer bits than the mantissa size, expand by padding with 0's to the *right*.
+
+    If the inter portion of the multiplication is *less than 1* (i.e. it starts with `0.`), then perform the usual normalization process - shift the decimal point *left* until the first `1` moves to the left of the decimal point, and *subtract* the number of shifts from the calculated exponent.
+
+    For this problem, we get `1.101110` - so our mantissa is `1011100000` (for a 16 bit float). We don't have to change the exponent, because the product of the two numbers already began with a `1`, so our original exponent calculation is used as-is.
+
+4. Assemble your exponent, mantissa and sign bit back into an IEEE float.
+
+    If one of the numbers you multiplied was negative, set the sign bit to 1. If both or neither were negative, set it to 0.
+
+#### Example
+
+Let's multiply `5.5` and `2.5`.
+
+- Start with the numbers:
+    - 5.5 -> `0 10001 0110000000`
+    - 2.5 -> `0 10000 0100000000`
+- Compute the new exponent:
+    - `10001` -> 17
+    - `10000` -> 16
+    - `17 + 16 = 33`
+    - `33 - 15 = 18` 
+- Multiply the mantissas, after addiing the leading `1`.
+
+    ```
+      1.0110000000
+    * 1.0100000000
+    --------------
+    ```
+
+    We can simplify the multiplication by simply dropping all trailing zeroes:
+
+    ```
+      1.011
+    * 1.010
+    -------
+    ```
+    We did this process above in the directions!
+
+    The result is `1.10111`. Thus, our mantissa is `10111`.
+- Assemble the final floating point value.
+    - Sign bit: `0` (no negative numbers)
+    - Exponent bits: `10010` (exponent of 3 + bias of 15 = 18)
+    - Mantissa bits: `1011100000`
+
+Our final answer: `0 10010 1011100000`
 
 # Why can't we represent 0.1 in IEEE floating point?
 
