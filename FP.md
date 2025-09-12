@@ -248,10 +248,6 @@ The steps for multiplication involve first calculating the exponent and then mul
 
 3. Ignore the leading 1, and collect as many bits as are available for the mantissa. If there are fewer bits than the mantissa size, expand by padding with 0's to the *right*.
 
-    If the inter portion of the multiplication is *less than 1* (i.e. it starts with `0.`), then perform the usual normalization process - shift the decimal point *left* until the first `1` moves to the left of the decimal point, and *subtract* the number of shifts from the calculated exponent.
-
-    For this problem, we get `1.101110` - so our mantissa is `1011100000` (for a 16 bit float). We don't have to change the exponent, because the product of the two numbers already began with a `1`, so our original exponent calculation is used as-is.
-
 4. Assemble your exponent, mantissa and sign bit back into an IEEE float.
 
     If one of the numbers you multiplied was negative, set the sign bit to 1. If both or neither were negative, set it to 0.
