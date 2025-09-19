@@ -45,7 +45,7 @@ This line tells the C preprocessor to include the contents of the file `stdio.h`
 
 The purpose of including `stdio.h` is to get access to functions that work with input and output (**st**andar**d** **i**nput and **o**utput). In particular, we need the `scanf` function, which reads input, and the `printf` function, which prints or writes output.
 
-`int main(void) {`
+`int main() {`
 
 This line starts our C program's `main` function. 
 
