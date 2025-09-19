@@ -17,3 +17,5 @@ Welcome to the MCS 276 GitHub repository! In this repository you will find mater
 * **[Dive Into Systems](https://diveintosystems.org/)** - Course Textbook (free)
 * [IEEE 754 Floating Point Reference Guide](FP.md)
 * [Installing GCC for C Programming](DEV_SETUP.md)
+* [Deconstructing a simple C program](C_DECON.md)
+
