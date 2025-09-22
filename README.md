@@ -11,6 +11,7 @@ Welcome to the MCS 276 GitHub repository! In this repository you will find mater
 * **[Syllabus](SYLLABUS.md)**
 * Assignments:
   * Assignment 1: [Floating Point](I_ASSIGN1.md)
+  * Assignment 2: [C Programming #1](I_ASSIGN2.md)
 
 ## Supplemental Materials
 
