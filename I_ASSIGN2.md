@@ -1,4 +1,4 @@
-# C Programming Assignment #1
+# Programming Lab #1 - Intro to C
 
 For this assignment, you will write a very simple application in Python *and* in C. The application will read a number input by the user, and will print that number in both *hexadecimal* and *binary* format.
 

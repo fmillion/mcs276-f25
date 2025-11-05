@@ -1,4 +1,4 @@
-# Programming Assignment #2 (Full Adder)
+# Programming Lab #2 (Full Adder)
 
 In this assignment you will write an application that simulates a chain of full adders to illustrate how two numbers rae added at the logical level.
 
