@@ -1,5 +1,3 @@
-!!! IN PROGRESS - NOT COMPLETE !!!
-
 # Assignment #5: Assembly Subroutines
 
 For this assignment you will use [Simple 8-Bit Assembly Simulator](https://schweigi.github.io/assembler-simulator/) implement an assembly language *subroutine* that performs the `rot13` operation on a null-terminated string **in-place**. Your function will be called by a test harness (code given below) that sets up the input and displays the result.
@@ -72,37 +70,47 @@ testString: DB "HELLO WORLD", 0
 Implement the `rot13:` subroutine. Your code should:
 
 1. Read characters from the string at address in register B
-2. Transform each letter using ROT13
+2. Transform each letter using `rot13`
 3. Write the transformed character back to the same memory location
 4. Continue until the null terminator (0) is reached
-5. Return the string's address in register A
+5. Return the **number of characters transformed** in register A.
 6. Use RET to return to the test harness
 
 ## Implementation Hints
 
 - You'll need to loop through the string character by character
 - Use pointer arithmetic or increment your pointer register
-- To check if a character is a letter: compare with ASCII values (A=65, Z=90)
-- For ROT13 logic, consider: if letter is A-M (65-77), add 13; if N-Z (78-90), subtract 13
+- To check if a character is a letter: compare with ASCII values (A=65 or 0x41, Z=90 or 0x5A)
+- For `rot13` logic, consider: if letter is A-M (65-77), add 13; if N-Z (78-90), subtract 13
 - Don't forget to preserve the null terminator!
 - Remember to set register A before returning
 
 ## Grading Rubric
 
-**Correctness (60%)**
-- Returns correct address in register A (10%)
+<table><tr><th>Item</th><th>Points</th><th>Notes</th></tr>
+<tr><th>Correctness</th><td>60%</td><td>
+
+* Returns correct address in register A (10%)
 - Properly transforms A-Z letters using ROT13 (30%)
 - Leaves spaces and null terminator unchanged (10%)
 - Works correctly with various test strings (10%)
 
-**Code Quality (25%)**
+</td></tr>
+
+<tr><th>Code Quality</th><td>25%</td><td>
+
 - Reasonable efficiency - no obviously wasteful operations (10%)
 - Clear, logical code structure (15%)
 
-**Documentation (15%)**
+</td></tr>
+<tr><th>Documentation</th><td>10%</td><td>
+
 - Algorithm explanation in comments (10%)
-- Key sections labeled/commented (5%)
+
+</td></tr></table>
 
 ## Submission Requirements
 
 Submit a single file containing only your `rot13:` subroutine
+
+This assignment will be due on **Monday, November 24th** at **11:59 PM**. We will discuss this assignment in class on 11/24 - if you are completely stuck, come with questions that day!
