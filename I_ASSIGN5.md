@@ -113,4 +113,6 @@ Implement the `rot13:` subroutine. Your code should:
 
 Submit a single file containing only your `rot13:` subroutine
 
+This assignment is worth **150 points.**
+
 This assignment will be due on **Monday, November 24th** at **11:59 PM**. We will discuss this assignment in class on 11/24 - if you are completely stuck, come with questions that day!
