@@ -41,11 +41,11 @@ The following is the code that you will test with. To test, just add your code t
 
 ```assembly
 ; Test Harness - DO NOT MODIFY
-    MOV A, testString      ; Load address of string
+    MOV B, testString      ; Load address of string
     CALL rot13             ; Call your function
 
     ; Store return from function
-    MOV result, A 
+    MOV [result], A 
 
     ; Display result (copies from testString to output region)
     MOV C, 0xE8
@@ -64,7 +64,8 @@ done:
     HLT
 
 result: DB 0
-testString: DB "HELLO WORLD", 0
+testString: DB "HELLO WORLD"
+            DB 0           ; null string terminator
 
 ; Put your code below this line, starting with  "rot13:"
 ```
