@@ -41,12 +41,15 @@ The following is the code that you will test with. To test, just add your code t
 
 ```assembly
 ; Test Harness - DO NOT MODIFY
-    MOV B, testString      ; Load address of string
+    MOV A, testString      ; Load address of string
     CALL rot13             ; Call your function
-    
-    ; Display result (copies from address in A to output region)
-    MOV C, 0xE0
-    MOV D, A
+
+    ; Store return from function
+    MOV result, A 
+
+    ; Display result (copies from testString to output region)
+    MOV C, 0xE8
+    MOV D, testString
 displayLoop:
     MOV A, [D]
     CMP A, 0
@@ -54,12 +57,13 @@ displayLoop:
     MOV [C], A
     INC C
     INC D
-    CMP C, 0xF0           ; Max 16 characters
+    CMP C, 0xF8           ; Max 16 characters
     JZ done
     JMP displayLoop
 done:
     HLT
 
+result: DB 0
 testString: DB "HELLO WORLD", 0
 
 ; Put your code below this line, starting with  "rot13:"
