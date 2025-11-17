@@ -41,31 +41,31 @@ The following is the code that you will test with. To test, just add your code t
 
 ```assembly
 ; Test Harness - DO NOT MODIFY
-    MOV B, testString      ; Load address of string
-    CALL rot13             ; Call your function
+    MOV B, testString     ; Load address of string to B
+    CALL rot13            ; Call your function
 
     ; Store return from function
-    MOV [result], A 
+    MOV [result], A       ; set value in memory at [result] to value in A
 
     ; Display result (copies from testString to output region)
-    MOV C, 0xE8
-    MOV D, testString
+    MOV C, 0xE8           ; set C to first byte of display output
+    MOV D, testString     ; set D to address of testString
 displayLoop:
-    MOV A, [D]
-    CMP A, 0
-    JZ done
-    MOV [C], A
-    INC C
-    INC D
+    MOV A, [D]            ; copy value at address in [D] to A
+    CMP A, 0              ; compare value in A with 0
+    JZ done               ; jump to done (break loop) if value at string pointer is 0
+    MOV [C], A            ; copy value in A to current display pointer
+    INC C                 ; increment display pointer
+    INC D                 ; increment string pointer
     CMP C, 0xF8           ; Max 16 characters
-    JZ done
-    JMP displayLoop
+    JZ done               ; jump to done (break loop) if display pointer is at 0xF8
+    JMP displayLoop       ; continue loop
 done:
-    HLT
+    HLT                   ; stop processor
 
 result: DB 0
 testString: DB "HELLO WORLD"
-            DB 0           ; null string terminator
+            DB 0          ; null string terminator
 
 ; Put your code below this line, starting with  "rot13:"
 ```
