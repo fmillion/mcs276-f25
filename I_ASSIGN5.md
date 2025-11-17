@@ -101,9 +101,9 @@ Implement the `rot13:` subroutine. Your code should:
 
 </td></tr>
 
-<tr><th>Code Quality</th><td>25%</td><td>
+<tr><th>Code Quality</th><td>30%</td><td>
 
-- Reasonable efficiency - no obviously wasteful operations (10%)
+- Reasonable efficiency - no obviously wasteful operations (15%)
 - Clear, logical code structure (15%)
 
 </td></tr>
