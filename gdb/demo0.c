@@ -12,3 +12,13 @@ int main() {
     printf("Sum: %d\n", sum);
     return 0;
 }
+
+/*
+ * Steps
+ *
+ * 1. gcc -g -O0 -o demo0 demo0.c
+ * 2. gdb ./demo0
+ * 3. (gdb) break main
+ * 4. (gdb) run
+ * 5. (gdb) step # until inside add
+*/
