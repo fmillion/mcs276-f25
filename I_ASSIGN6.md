@@ -1,3 +1,5 @@
+# THIS IS NOT COMPLETE. THIS IS A WORK IN PROGRESS THAT IS CHANGING IN REAL TIME. DO NOT START THIS ASSIGNMENT UNTIL THIS MESSAGE GOES AWAY!
+
 # Assignment 6: Building a Data Encoding Library
 
 ## Overview
@@ -72,7 +74,7 @@ Your header file must contain:
 
 ### 2. `protocol.c` — Implementation File
 
-Implement the two functions:
+Implement the function:
 
 **`int decode_message(const uint8_t *data, SensorMessage *msg)`**
 - Takes a pointer to 8 bytes of raw data
@@ -163,76 +165,6 @@ clean:
 .PHONY: static shared all clean
 ```
 
----
-
-## Example Test Data
-
-Here are some example messages you can use for testing. Your program should be able to encode these structs and decode them back correctly.
-
-**Example 1: Temperature Reading**
-```c
-// Temperature: 23.5°C from sensor 1, no flags
-SensorMessage temp_msg = {
-    .type = 0x01,           // Temperature
-    .flags = 0x00,          // No flags
-    .sensor_id = 1,         // Sensor 1
-    .reading = 235          // 23.5 degrees (in tenths)
-};
-// Encoded bytes: 01 00 01 00 EB 00 00 00
-```
-
-**Example 2: Humidity with Alert**
-```c
-// Humidity: 95.2% from sensor 42, with alert flag
-SensorMessage humid_msg = {
-    .type = 0x02,           // Humidity
-    .flags = 0x01,          // Alert flag set
-    .sensor_id = 42,        // Sensor 42
-    .reading = 952          // 95.2% (in tenths)
-};
-// Encoded bytes: 02 01 2A 00 B8 03 00 00
-```
-
-**Example 3: Pressure with Multiple Flags**
-```c
-// Pressure: 101325 Pa from sensor 256, low battery + needs calibration
-SensorMessage press_msg = {
-    .type = 0x03,           // Pressure
-    .flags = 0x06,          // Low battery (0x02) + Calibration (0x04)
-    .sensor_id = 256,       // Sensor 256
-    .reading = 101325       // 101325 Pascals
-};
-// Encoded bytes: 03 06 00 01 4D 8C 01 00
-```
-
-**Example 4: Negative Temperature**
-```c
-// Temperature: -15.0°C from sensor 7, alert flag
-SensorMessage cold_msg = {
-    .type = 0x01,           // Temperature
-    .flags = 0x01,          // Alert flag
-    .sensor_id = 7,         // Sensor 7
-    .reading = -150         // -15.0 degrees (in tenths)
-};
-// Encoded bytes: 01 01 07 00 6A FF FF FF
-```
-
----
-
-## GDB Requirement
-
-You must include evidence of using GDB to examine your program's state.
-
-**Task:** Set a breakpoint inside your `decode_message()` function, after you have parsed the message into the struct. Run your program under GDB with one of your test messages, and capture the following:
-
-1. The output of `info locals` showing your local variables
-2. The output of `print *msg` showing the contents of the decoded struct
-3. The output of `x/8xb data` showing the raw input bytes
-
-Include a screenshot or copy-paste of your GDB session in your submission.
-
----
-
 ## Expected Output Format
 
 Your test program should print output similar to this:
@@ -266,8 +198,6 @@ Submit the following files:
 1. `protocol.h` — Your header file
 2. `protocol.c` — Your implementation file
 3. `main.c` — Your test program
-4. `Makefile` — The completed Makefile
-5. `gdb_output.txt` (or screenshot) — Your GDB session evidence
 
 ---
 
