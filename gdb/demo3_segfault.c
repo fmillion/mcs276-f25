@@ -18,6 +18,11 @@
  * This function has a bug: it dereferences a NULL pointer.
  */
 void process_data(int *data, int count) {
+    if (data == NULL) {
+        printf("Error: NULL data pointer\n");
+        return;
+    }
+
     int sum = 0;
     
     // Bug: We don't check if data is NULL!
