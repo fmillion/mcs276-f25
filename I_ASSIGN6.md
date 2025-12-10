@@ -1,17 +1,13 @@
 # Final Assignment: Building a Data Encoding Library
 
-## MCS 276 - Intro to Systems 1
-
----
-
 ## Overview
 
-In this assignment, you will create a **C library** that provides functions for decoding data in a simple binary format. You will then write a **separate program** that uses your library to process some test data.
+In this assignment, you will create a **C library** that provides a function for decoding data in a simple binary format. You will then write a **separate program** that uses your library to process some test data.
 
 This assignment ties together many concepts from the course:
 
 - Binary representation and bitwise operations
-- C programming with structs and pointers
+- C programming with structs
 - The compilation pipeline (compiling, linking, libraries)
 
 ---
@@ -57,9 +53,9 @@ Message Structure (8 bytes total):
 
 You will create the following files:
 
-### 1. `protocol.h` — Header File
+### 1. Header File
 
-Your header file must contain:
+Create a file called `protocol.h`. Your header file must contain:
 
 1. **A struct definition** for the decoded message:
    ```c
@@ -68,9 +64,8 @@ Your header file must contain:
    } SensorMessage;
    ```
 
-2. **Function prototypes** for:
+2. **A function prototype** for:
    - `int decode_message(const uint8_t *data, SensorMessage *msg);`
-   - `int encode_message(const SensorMessage *msg, uint8_t *data);`
 
 3. **Constant definitions** for message types (using `#define` or `enum`)
 
@@ -85,40 +80,56 @@ Your header file must contain:
     >
     > Recall that preprocessor constants are useful for fixed values that might change at *compile time*, but *never change* at runtime.
 
-### 2. `protocol.c` — Implementation File
+### 2. Implementation File
 
-Implement one function:
+Create a file `protocol.c` and implement one function:
 
 **`int decode_message(const uint8_t *data, SensorMessage *msg)`**
 - Takes a pointer to 8 bytes of raw data
 - Parses the bytes and fills in the `SensorMessage` struct
 - Returns `0` on success, `-1` on error (e.g., invalid message type)
 
-**Important implementation notes:**
-- You must ensure proper handling of little-endian byte order for multi-byte fields. All data will be in little-endian format.
-- You must use bitwise operations to extract/set flag bits. 
-- Do NOT use any non-standard library functions.
+> **Important implementation notes:**
+> - You must ensure proper handling of little-endian byte order for multi-byte fields. All data will be in little-endian format.
+> - You must use bitwise operations to extract/set flag bits. 
+> - Do NOT use any non-standard library functions.
 
-### 3. `main.c` — Test Program
+> **Assumption"**
+>
+> You may assume the data will be *valid* - you do not need to worry about buffer overflows or arrays that are too small being passed to the function. (This means that for testing, *you need to provide valid data!*)
+
+### 3. Test Program
 
 Write a program that:
 
-1. Creates at least three byte representations of `SensorMessage` in arrays
+1. Creates at least three byte representations of `SensorMessage` in `uint8_t` arrays (byte arrays)
 
     > Hint: You can put arbitrary hexadecimal values into a byte array directly, like this:
     >
     >     uint8_t testMessage[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
 
-2. Decodes the encoded bytes to structs using your `decode_message()` function
+2. Decodes the encoded bytes to structs using your `decode_message()` function. Create an empty `SensorMessage` struct to pass to the function, and remember to use pointer syntax when passing the struct!
 
 3. Prints the results from the struct using dot notation and standard `printf` commands.
+
+Print the data for each struct in one of these formats as appropriate:
+
+    Temperature, sensor 7, alert clear, battery OK, 23.5 C
+    Humidity, sensor 42, alert set, battery OK, 95.2%
+    Pressure, sensor 256, alert set, battery low, 101325 Pa
+
+> **Hints:**
+>
+> - You should always print the alert and battery flags even if they're unset. For alert, use `set` and `clear` for `1` and `0` respectively; for battery, use `OK` and `low` for `0` and `1`, respectively.
+> - You can use two percents `%%` to put a percent sign inside of a `printf` format string.
+> - You'll want to use an if/else if statement or a switch statement to print the correct type of output - temperature should be `x.y C`, humidity should be `x.y%`, and pressure should be `x Pa` (`x` is any number before the decimal point and `y` is any number after it; both temperature and humidity are expressed in tenths, but pressure is in literal Pa units.)
 
 Your test data must include at least:
 - One message of each type (temperature, humidity, pressure)
 - At least one message with multiple flags set
 - At least one message with a negative reading value
 
-You must do a bare minimum of three messages, but more is always good!
+You must do a bare minimum of three test messages, but more is always good! Below are several examples you can use for testing, but *you must also provide three of your* ***own*** *messages with your* ***own*** *sample values!*
 
 ### 4. Building the program
 
@@ -132,13 +143,15 @@ Follow these steps to build your program:
 
 2. Create a static archive of your compiled object file.
 
-        ar rcs libprotocol.a libprotocol.o
+        ar rcs libprotocol.a protocol.o
     
     This creates the `.a` file that the linker can use later to produce a complete executable binary.
 
 3. Build the main program, linking statically:
 
-        gcc -O2 -s main.c -L. -lprotocol -o mcs276_a6
+        gcc -O2 --static main.c -L. -lprotocol -o mcs276_a6
+
+    Recall that the linker will look for `.a` (archive) files when building code statically. Essentially, the `.a` file is analogous to a ZIP file containing a copy of the `.o` file. (`.a` files are not limited to just one object file - large libraries, like the C standard library, bring many `.o` files together into a single `.a` file.)
 
     You can now execute the program:
 
@@ -170,12 +183,12 @@ Here are some example messages you can use for testing. Your program should be a
 **Example 3: Pressure with Multiple Flags**
 
     // Pressure reading, sensor ID 256, 101.3 kPa (101325 Pa), low battery alert
-    uint8_t example3[] = { 0x03, 0x06, 0x00, 0x01, 0xCD, 0x8B, 0x01, 0x00 }
+    uint8_t example3[] = { 0x03, 0x02, 0x00, 0x01, 0xCD, 0x8B, 0x01, 0x00 }
 
 **Example 4: Negative Temperature**
 
-    // Temperature reading, sensor ID 7, alert set, negative 15 degrees C
-    uint8_t example4[] = { 0x01, 0x01, 0x07, 0x00, 0x6A, 0xFF, 0xFF, 0xFF }
+    // Temperature reading, sensor ID 7, alert set and low battery, negative 15 degrees C
+    uint8_t example4[] = { 0x01, 0x03, 0x07, 0x00, 0x6A, 0xFF, 0xFF, 0xFF }
 
 ---
 
@@ -187,15 +200,17 @@ Submit the following files:
 2. `protocol.c` — Your implementation file
 3. `main.c` — Your test program
 
+You do NOT need to submit a compiled copy of your program. **Remember you must submit your** ***source code*** - submitting only a binary will result in no points (since I can't read your code!)
+
 ---
 
 ## Grading Rubric
 
 | Component | Points | Details |
 |-----------|--------|---------|
-| **Header File** | 20 | Correct struct, prototypes, include guards, constants |
-| **encode_message()** | 50 | Correctly encodes all fields, handles endianness and flags |
-| **Test Program** | 30 | Tests all message types, flags, negative values; clear output |
+| **Header File** | 20 | Correct struct, prototypes, constants |
+| **encode_message()** | 50 | Correctly decodes all fields, handles endianness and flags |
+| **Test Program** | 30 | Tests all message types per requirements |
 
 **Total: 100 points**
 
