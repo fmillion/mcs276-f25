@@ -41,26 +41,31 @@ The following is the code that you will test with. To test, just add your code t
 
 ```assembly
 ; Test Harness - DO NOT MODIFY
-    MOV B, testString      ; Load address of string
-    CALL rot13             ; Call your function
-    
-    ; Display result (copies from address in A to output region)
-    MOV C, 0xE0
-    MOV D, A
-displayLoop:
-    MOV A, [D]
-    CMP A, 0
-    JZ done
-    MOV [C], A
-    INC C
-    INC D
-    CMP C, 0xF0           ; Max 16 characters
-    JZ done
-    JMP displayLoop
-done:
-    HLT
+    MOV B, testString       ; Load address of string to B
+    CALL rot13              ; Call your function
 
-testString: DB "HELLO WORLD", 0
+    ; Store return from function
+    MOV [result], A         ; set value in memory at [result] to value in A
+
+    ; Display result (copies from testString to output region)
+    MOV C, 0xE8             ; set C to first byte of display output
+    MOV D, testString       ; set D to address of testString
+displayLoop:
+    MOV A, [D]              ; copy value at address in [D] to A
+    CMP A, 0                ; compare value in A with 0 (if A == 0)
+    JZ done                 ; jump to done (break loop) if value at string pointer is 0
+    MOV [C], A              ; copy value in A to current display pointer
+    INC C                   ; increment display pointer
+    INC D                   ; increment string pointer
+    CMP C, 0xF8             ; Max 16 characters (if C == 0xF8)
+    JZ done                 ; jump to done (break loop) if display pointer is at 0xF8
+    JMP displayLoop         ; continue loop
+done:
+    HLT                     ; stop processor
+
+result: DB 0
+testString: DB "HELLO WORLD"
+            DB 0            ; null string terminator
 
 ; Put your code below this line, starting with  "rot13:"
 ```
@@ -97,9 +102,9 @@ Implement the `rot13:` subroutine. Your code should:
 
 </td></tr>
 
-<tr><th>Code Quality</th><td>25%</td><td>
+<tr><th>Code Quality</th><td>30%</td><td>
 
-- Reasonable efficiency - no obviously wasteful operations (10%)
+- Reasonable efficiency - no obviously wasteful operations (15%)
 - Clear, logical code structure (15%)
 
 </td></tr>

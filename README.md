@@ -15,6 +15,7 @@ Welcome to the MCS 276 GitHub repository! In this repository you will find mater
   * Assignment 3: [Full Adder (Programming #2)](I_ASSIGN3.md)
   * Assignment 4: [Assembly Language](I_ASSIGN4.md)
   * Assignment 5: [Assembly Language Functions](I_ASSIGN5.md)
+  * Assignment 6: [C Libraries and Linking](I_ASSIGN6.md)
 
 ## Supplemental Materials
 
@@ -22,5 +23,6 @@ Welcome to the MCS 276 GitHub repository! In this repository you will find mater
 * [IEEE 754 Floating Point Reference Guide](FP.md)
 * [Installing GCC for C Programming](DEV_SETUP.md)
 * [Deconstructing a simple C program](C_DECON.md)
+* [GDB Debugger Reference](DEBUGGER.md)
 * [x86_64 Assembly Language Reference](https://www.felixcloutier.com/x86/)
 * [64-bit x86 Registers](https://wiki.osdev.org/CPU_Registers_x86-64)
