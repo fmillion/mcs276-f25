@@ -15,6 +15,7 @@ Welcome to the MCS 276 GitHub repository! In this repository you will find mater
   * Assignment 3: [Full Adder (Programming #2)](I_ASSIGN3.md)
   * Assignment 4: [Assembly Language](I_ASSIGN4.md)
   * Assignment 5: [Assembly Language Functions](I_ASSIGN5.md)
+  * Assignment 6: [C Libraries and Linking](I_ASSIGN6.md)
 
 ## Supplemental Materials
 
