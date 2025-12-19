@@ -69,7 +69,8 @@ Create a file called `protocol.h`. Your header file must contain:
 
 3. **Constant definitions** for message types (using `#define` or `enum`)
 
-    > Hint: Remember that `#define` works just as a simple find/replace in the preprocessor. Therefore, you could do:
+    > [!TIP]
+    > Remember that `#define` works just as a simple find/replace in the preprocessor. Therefore, you could do:
     >
     >     #define FIRST_VALUE 1
     >     #define SECOND_VALUE 2
@@ -89,6 +90,7 @@ Create a file `protocol.c` and implement one function:
 - Parses the bytes and fills in the `SensorMessage` struct
 - Returns `0` on success, `-1` on error (e.g., invalid message type)
 
+> [!IMPORTANT]
 > **Important implementation notes:**
 > - You must ensure proper handling of little-endian byte order for multi-byte fields. All data will be in little-endian format.
 > - You must use bitwise operations to extract/set flag bits. 
@@ -118,7 +120,18 @@ Print the data for each struct in one of these formats as appropriate:
     Humidity, sensor 42, alert set, battery OK, 95.2%
     Pressure, sensor 256, alert set, battery low, 101325 Pa
 
-> **Hints:**
+> [!IMPORTANT]
+> We did not throughly cover **casting** in class. Since all of the values come as integers, but you're expected to treat them as tenths when printing, you'll need to **cast** the integer value you derive from the data into a **float**.
+>
+> You can do that explicitly like this:
+>
+>     float floatValue = (float)intValue;
+>
+> This of course assumes `intValue` is an integer and already contains the value you intend to convert.
+>
+> Casting lets you tell the runtime that you want to do the conversion; the actual steps to convert the number are handled for you behind the scenes.
+ 
+> [!TIP]
 >
 > - You should always print the alert and battery flags even if they're unset. For alert, use `set` and `clear` for `1` and `0` respectively; for battery, use `OK` and `low` for `0` and `1`, respectively.
 > - You can use two percents `%%` to put a percent sign inside of a `printf` format string.
